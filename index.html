@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KEMBARA ILMU - Belajar Sambil Cari Jalan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Mali:wght@600;700&family=Outfit:wght@700;800;900&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Fredoka', 'Quicksand', sans-serif;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #070a14;
+            color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.14) 0%, transparent 38%),
+                radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.16) 0%, transparent 42%);
+        }
+
+        /* 3D Neon Brand Title */
+        .title-3d-neon {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(180deg, #ffffff 15%, #7dd3fc 55%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 0 #4c1d95) drop-shadow(0 7px 0 #1e1b4b) drop-shadow(0 0 18px rgba(56, 189, 248, 0.65));
+        }
+
+        /* Cyber Neon Cards */
+        .cyber-card {
+            background: linear-gradient(165deg, rgba(17, 24, 49, 0.96) 0%, rgba(11, 15, 34, 0.98) 100%);
+            border: 2px solid #38bdf8;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), inset 0 0 16px rgba(168, 85, 247, 0.18);
+        }
+
+        .cyber-card-purple {
+            background: linear-gradient(165deg, rgba(24, 18, 56, 0.96) 0%, rgba(12, 10, 32, 0.98) 100%);
+            border: 2px solid #a855f7;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 24px rgba(168, 85, 247, 0.28);
+        }
+
+        /* Neon Buttons */
+        .btn-cyber-primary {
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            color: #070a14;
+            box-shadow: 0 4px 0 #0369a1, 0 0 18px rgba(56, 189, 248, 0.5);
+            transition: all 0.12s ease;
+        }
+        .btn-cyber-primary:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0369a1;
+        }
+
+        .btn-cyber-amber {
+            background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+            color: #070a14;
+            box-shadow: 0 4px 0 #92400e, 0 0 15px rgba(251, 191, 36, 0.45);
+            transition: all 0.12s ease;
+        }
+        .btn-cyber-amber:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #92400e;
+        }
+
+        /* Responsive Canvas Container (900x580 Aspect Ratio) */
+        #canvasContainer {
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 900 / 580;
+            position: relative;
+            border: 3px solid #38bdf8;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.35), 0 0 60px rgba(168, 85, 247, 0.2);
+            background: #0b1126;
+        }
+
+        #mazeCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+
+        /* Virtual D-Pad for Mobile / Tablet */
+        .dpad-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.82);
+            border: 2px solid #38bdf8;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+            user-select: none;
+        }
+        .dpad-btn:active {
+            background: #38bdf8;
+            color: #070a14;
+            transform: scale(0.93);
+        }
+
+        /* Recording Pulse Animation */
+        @keyframes recPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
+        }
+        .recording-active {
+            animation: recPulse 1.3s infinite;
+        }
+
+        /* Print Styles for Digital Certificate */
+        @media print {
+            body * { visibility: hidden; }
+            #certificateModal, #certificateModal * { visibility: visible; }
+            #certificateModal {
+                position: absolute;
+                inset: 0;
+                background: #ffffff !important;
+                padding: 0 !important;
+            }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between">
+
+    <!-- ========================================================== -->
+    <!-- SKRIN 1: MENU UTAMA & LOG MASUK (#loginScreen)             -->
+    <!-- ========================================================== -->
+    <section id="loginScreen" class="w-full min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-lg cyber-card p-6 sm:p-8 text-center space-y-5 relative overflow-hidden">
+            <!-- Decorative Glow Orbs -->
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-[#38bdf8]/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-[#a855f7]/25 rounded-full blur-2xl pointer-events-none"></div>
+
+            <!-- Header & 3D Neon Title -->
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1e1b4b] border border-[#a855f7] text-[#e9d5ff] text-xs font-bold tracking-wider uppercase">
+                    <i class="fa-solid fa-rocket text-[#fbbf24]"></i> Bahasa Melayu Tahun 1
+                </div>
+                <h1 class="title-3d-neon text-4xl sm:text-5xl font-black tracking-wide uppercase leading-none">
+                    KEMBARA ILMU
+                </h1>
+                <p class="text-xs sm:text-sm font-extrabold tracking-widest text-[#fbbf24] uppercase">
+                    "BELAJAR SAMBIL CARI JALAN"
+                </p>
+            </div>
+
+            <!-- Feature Badges -->
+            <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
+                <span class="px-3 py-1.5 rounded-full bg-[#0f172a] border border-[#38bdf8]/60 text-[#7dd3fc] flex items-center gap-1.5">
+                    <i class="fa-solid fa-person-running text-[#fbbf24]"></i> Gerak Watak
+                </span>
+                <span class="px-3 py-1.5 rounded-full bg-[#0f172a] border border-[#a855f7]/60 text-[#d8b4fe] flex items-center gap-1.5">
+                    <i class="fa-solid fa-flag-checkered text-[#38bdf8]"></i> 5 Checkpoint
+                </span>
+                <span class="px-3 py-1.5 rounded-full bg-[#0f172a] border border-[#fbbf24]/60 text-[#fde68a] flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-question text-[#a855f7]"></i> 20 Soalan & Rekod Suara
+                </span>
+            </div>
+
+            <!-- Player Input -->
+            <div class="bg-[#0b1126] p-4 rounded-2xl border border-[#38bdf8]/40 text-left space-y-3">
+                <div>
+                    <label for="playerNameInput" class="block text-xs sm:text-sm font-bold text-[#7dd3fc] mb-1">
+                        <i class="fa-solid fa-user-astronaut text-[#fbbf24] mr-1"></i> Nama Pengembara (Wajib Diisi):
+                    </label>
+                    <input type="text" id="playerNameInput" oninput="validateLoginFields()" placeholder="Taip nama penuh anda di sini..." 
+                           class="w-full px-4 py-2.5 rounded-xl bg-[#070a14] border-2 border-[#38bdf8] text-white font-bold text-sm sm:text-base focus:outline-none focus:border-[#fbbf24]">
+                </div>
+                <div>
+                    <label for="playerClassInput" class="block text-xs sm:text-sm font-bold text-[#7dd3fc] mb-1">
+                        <i class="fa-solid fa-school text-[#fbbf24] mr-1"></i> Nama Kelas (Wajib Diisi):
+                    </label>
+                    <input type="text" id="playerClassInput" oninput="validateLoginFields()" placeholder="Contoh: 1 Bestari / 1 Cemerlang" 
+                           class="w-full px-4 py-2.5 rounded-xl bg-[#070a14] border-2 border-[#a855f7] text-white font-bold text-sm sm:text-base focus:outline-none focus:border-[#fbbf24]">
+                </div>
+                <p id="loginErrorMsg" class="hidden text-xs font-bold text-rose-400">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Nama dan Kelas tidak boleh kosong atau ruang kosong (space) sahaja!
+                </p>
+            </div>
+
+            <!-- Character & World Customization -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                <!-- Suit Color Selection -->
+                <div class="bg-[#0b1126] p-3.5 rounded-2xl border border-[#a855f7]/40 space-y-2">
+                    <span class="block text-xs font-bold text-[#d8b4fe]">Warna Baju Watak:</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" id="suitBlueBtn" onclick="selectSuitColor('blue')" class="py-2 px-2.5 rounded-xl border-2 border-[#38bdf8] bg-[#1e3a8a]/60 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition">
+                            <span class="w-3.5 h-3.5 rounded-full bg-[#2563eb] border border-white"></span> Biru
+                        </button>
+                        <button type="button" id="suitRedBtn" onclick="selectSuitColor('red')" class="py-2 px-2.5 rounded-xl border-2 border-slate-700 bg-[#0f172a] text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 opacity-80 transition">
+                            <span class="w-3.5 h-3.5 rounded-full bg-[#ef4444] border border-white"></span> Merah
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Theme / Time of Day Dropdown -->
+                <div class="bg-[#0b1126] p-3.5 rounded-2xl border border-[#a855f7]/40 space-y-2">
+                    <label for="loginAtmosphereSelect" class="block text-xs font-bold text-[#d8b4fe]">Suasana Maze:</label>
+                    <select id="loginAtmosphereSelect" onchange="changeAtmosphere(this.value)" class="w-full py-2 px-3 rounded-xl bg-[#070a14] border-2 border-[#a855f7] text-white font-bold text-xs focus:outline-none">
+                        <option value="sunset" selected>🌌 Malam Neon 3D</option>
+                        <option value="morning">🌅 Pagi Keemasan</option>
+                        <option value="noon">☀️ Siang Cerah</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2.5 pt-1">
+                <button onclick="goToSectionSelection()" class="flex-1 py-3.5 btn-cyber-primary rounded-2xl font-black text-base sm:text-lg uppercase tracking-wide flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rocket"></i> Mula Pengembaraan
+                </button>
+                <button onclick="openLeaderboard()" class="w-14 h-14 btn-cyber-amber rounded-2xl font-black text-xl flex items-center justify-center" title="Carta Kedudukan">
+                    <i class="fa-solid fa-trophy"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- SKRIN 1B: PILIHAN SEKSYEN DI LUAR (#sectionSelectScreen)   -->
+    <!-- ========================================================== -->
+    <section id="sectionSelectScreen" class="hidden w-full min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-3xl cyber-card p-6 sm:p-8 text-center space-y-6">
+            <div class="space-y-1.5">
+                <span id="welcomeStudentBadge" class="inline-block px-4 py-1 rounded-full bg-[#1e1b4b] border border-[#fbbf24] text-[#fbbf24] text-xs font-extrabold uppercase tracking-wider">
+                    Selamat Datang, Pengembara!
+                </span>
+                <h2 class="title-3d-neon text-3xl sm:text-4xl font-black uppercase">
+                    PILIH MISI KEMBARA ANDA
+                </h2>
+                <p class="text-xs sm:text-sm text-[#cbd5e1] font-semibold">
+                    Sila pilih salah satu seksyen di bawah untuk memulakan pengembaraan ilmu:
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                <!-- Kad Seksyen 1 -->
+                <div class="bg-[#0b1126] border-2 border-[#38bdf8] rounded-2xl p-5 flex flex-col justify-between space-y-4 hover:shadow-[0_0_25px_rgba(56,189,248,0.4)] transition">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-[#38bdf8] text-[#070a14] font-black text-xs uppercase">Seksyen 1</span>
+                            <span class="text-2xl">🧩</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-black text-white">Kembara Soalan Pemahaman</h3>
+                        <ul class="text-xs text-[#bae6fd] space-y-1.5 font-semibold">
+                            <li><i class="fa-solid fa-check text-[#38bdf8] mr-1.5"></i> Jelajah 5 Checkpoint mengikut susunan.</li>
+                            <li><i class="fa-solid fa-check text-[#38bdf8] mr-1.5"></i> Baca petikan sendiri & jawab 20 soalan.</li>
+                            <li><i class="fa-solid fa-triangle-exclamation text-[#fbbf24] mr-1.5"></i> <b>1 percubaan sahaja</b> bagi setiap soalan (tiada pembetulan).</li>
+                        </ul>
+                    </div>
+                    <button onclick="startMode(1)" class="w-full py-3 btn-cyber-primary rounded-xl font-black text-sm uppercase flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Masuk Seksyen 1
+                    </button>
+                </div>
+
+                <!-- Kad Seksyen 2 -->
+                <div class="bg-[#0b1126] border-2 border-[#a855f7] rounded-2xl p-5 flex flex-col justify-between space-y-4 hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] transition">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-[#a855f7] text-white font-black text-xs uppercase">Seksyen 2</span>
+                            <span class="text-2xl">🎙️</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-black text-white">Kembara Rakaman Membaca</h3>
+                        <ul class="text-xs text-[#e9d5ff] space-y-1.5 font-semibold">
+                            <li><i class="fa-solid fa-check text-[#a855f7] mr-1.5"></i> Gerak watak melalui 5 Checkpoint bacaan.</li>
+                            <li><i class="fa-solid fa-check text-[#a855f7] mr-1.5"></i> Rekod suara & baca <b>semua ayat hingga selesai</b>.</li>
+                            <li><i class="fa-solid fa-stopwatch text-[#fbbf24] mr-1.5"></i> <b>Rekod paling pantas</b> dikira sebagai pemenang!</li>
+                        </ul>
+                    </div>
+                    <button onclick="startMode(2)" class="w-full py-3 bg-gradient-to-b from-[#c084fc] to-[#7e22ce] text-white rounded-xl font-black text-sm uppercase shadow-[0_4px_0_#581c87] flex items-center justify-center gap-2 active:translate-y-1 transition">
+                        <i class="fa-solid fa-microphone"></i> Masuk Seksyen 2
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
+                <button onclick="backToLogin()" class="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Tukar Nama / Kelas
+                </button>
+                <button onclick="openLeaderboard()" class="px-4 py-2 btn-cyber-amber rounded-xl font-extrabold text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-trophy"></i> Lihat Carta Pemenang
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- SKRIN 2: PAPARAN PERMAINAN UTAMA (#gameScreen)             -->
+    <!-- ========================================================== -->
+    <section id="gameScreen" class="hidden w-full max-w-5xl mx-auto px-2.5 sm:px-5 py-3 flex flex-col items-center space-y-3">
+        
+        <!-- BAR HUD ATAS -->
+        <div class="w-full cyber-card px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <!-- Avatar, Nama & Kelas -->
+            <div class="flex items-center gap-2">
+                <div id="hudAvatarCircle" class="w-9 h-9 rounded-full bg-[#2563eb] border-2 border-[#fbbf24] flex items-center justify-center text-base shadow">
+                    🧢
+                </div>
+                <div>
+                    <span id="hudPlayerName" class="font-extrabold text-white block leading-tight">Pengembara</span>
+                    <span id="hudPlayerClass" class="text-[11px] text-[#fbbf24] font-bold block">Kelas: -</span>
+                </div>
+            </div>
+
+            <!-- Penukar Suasana Langsung & Stats -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 font-bold">
+                <span id="hudModeBadge" class="bg-[#1e1b4b] border border-[#38bdf8] text-[#7dd3fc] px-2.5 py-1 rounded-lg text-xs font-extrabold">
+                    Seksyen 1
+                </span>
+
+                <select id="hudAtmosphereSelect" onchange="changeAtmosphere(this.value)" class="bg-[#070a14] border border-[#a855f7] text-[#e9d5ff] rounded-lg px-2 py-1 text-xs font-bold focus:outline-none">
+                    <option value="sunset">🌌 Malam Neon 3D</option>
+                    <option value="morning">🌅 Pagi Keemasan</option>
+                    <option value="noon">☀️ Siang Cerah</option>
+                </select>
+
+                <div class="bg-[#070a14] border border-slate-700 px-2.5 py-1 rounded-lg text-[#7dd3fc]" title="Masa">
+                    ⏱️ <span id="hudTimer">00:00</span>
+                </div>
+
+                <div class="bg-[#070a14] border border-[#fbbf24]/50 px-2.5 py-1 rounded-lg text-[#fbbf24]" title="Syiling Emas">
+                    🪙 <span id="hudCoins">0</span>
+                </div>
+
+                <div id="hudScoreBox" class="bg-[#070a14] border border-[#38bdf8]/50 px-2.5 py-1 rounded-lg text-[#38bdf8]" title="Markah">
+                    ⭐ <span id="hudScore">0</span> / 100
+                </div>
+
+                <div class="bg-[#070a14] border border-[#a855f7]/50 px-2.5 py-1 rounded-lg text-[#d8b4fe]" title="Kemajuan Checkpoint">
+                    🚩 <span id="hudCheckpoints">0</span> / 5
+                </div>
+
+                <!-- BGM, Leaderboard & Tukar Seksyen Buttons -->
+                <button id="bgmToggleBtn" onclick="toggleBGM()" class="w-8 h-8 rounded-lg bg-[#0f172a] border border-[#38bdf8] text-[#38bdf8] flex items-center justify-center hover:bg-[#38bdf8] hover:text-[#070a14] transition" title="Muzik Latar (BGM)">
+                    <i class="fa-solid fa-music"></i>
+                </button>
+                <button onclick="openLeaderboard()" class="w-8 h-8 rounded-lg bg-[#fbbf24] text-[#070a14] flex items-center justify-center hover:brightness-110 transition" title="Carta Kedudukan">
+                    <i class="fa-solid fa-trophy"></i>
+                </button>
+                <button onclick="returnToSectionMenu()" class="px-2.5 h-8 rounded-lg bg-slate-800 border border-slate-600 text-slate-200 hover:text-white text-xs font-bold flex items-center gap-1 transition" title="Kembali ke Pilihan Seksyen">
+                    <i class="fa-solid fa-grid-2"></i> Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- SEKSYEN 1 & 2: KANVAS MAZE BERSEPADU -->
+        <div id="section1View" class="w-full flex flex-col items-center space-y-2.5">
+            
+            <!-- Sepanduk Panduan & Amaran Sequential Lock -->
+            <div id="guideBanner" class="w-full max-w-[900px] bg-[#111831] border border-[#38bdf8]/60 rounded-xl px-4 py-2 text-center text-xs sm:text-sm font-bold text-[#e0f2fe] flex items-center justify-center gap-2">
+                <i class="fa-solid fa-compass text-[#fbbf24]"></i>
+                <span id="guideBannerText">Gerakkan watak mengikut laluan neon ke Checkpoint 1 (Radio)!</span>
+            </div>
+
+            <!-- Kanvas Permainan 900x580 Responsif -->
+            <div id="canvasContainer">
+                <canvas id="mazeCanvas" width="900" height="580"></canvas>
+
+                <!-- Virtual D-Pad Maya di Sudut Kiri Bawah Kanvas -->
+                <div class="absolute bottom-3 left-3 grid grid-cols-3 gap-1.5 z-10 opacity-90">
+                    <div></div>
+                    <button class="dpad-btn" onmousedown="setDpad('up', true)" onmouseup="setDpad('up', false)" ontouchstart="setDpad('up', true)" ontouchend="setDpad('up', false)">
+                        <i class="fa-solid fa-caret-up"></i>
+                    </button>
+                    <div></div>
+                    <button class="dpad-btn" onmousedown="setDpad('left', true)" onmouseup="setDpad('left', false)" ontouchstart="setDpad('left', true)" ontouchend="setDpad('left', false)">
+                        <i class="fa-solid fa-caret-left"></i>
+                    </button>
+                    <button class="dpad-btn" onmousedown="setDpad('down', true)" onmouseup="setDpad('down', false)" ontouchstart="setDpad('down', true)" ontouchend="setDpad('down', false)">
+                        <i class="fa-solid fa-caret-down"></i>
+                    </button>
+                    <button class="dpad-btn" onmousedown="setDpad('right', true)" onmouseup="setDpad('right', false)" ontouchstart="setDpad('right', true)" ontouchend="setDpad('right', false)">
+                        <i class="fa-solid fa-caret-right"></i>
+                    </button>
+                </div>
+
+                <!-- Petunjuk Kawalan di Sudut Kanan Bawah -->
+                <div class="hidden sm:flex absolute bottom-3 right-3 bg-[#070a14]/80 border border-[#38bdf8]/40 rounded-lg px-3 py-1.5 text-[11px] text-[#94a3b8] font-semibold items-center gap-2 pointer-events-none">
+                    <span>⌨️ WASD / Anak Panah</span>
+                    <span>•</span>
+                    <span>👆 Sentuh Laluan</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- SKRIN 3A: MODAL PETIKAN & SOALAN SEKSYEN 1 (#questionModal) -->
+    <!-- ========================================================== -->
+    <div id="questionModal" class="hidden fixed inset-0 bg-[#04060e]/85 backdrop-blur-sm z-40 flex items-center justify-center p-3">
+        <div class="w-full max-w-xl cyber-card p-5 sm:p-6 max-h-[90vh] overflow-y-auto space-y-4">
+            
+            <!-- Kotak Tajuk & Petikan (Bacaan Kendiri Tanpa Suara) -->
+            <div class="bg-[#0f172a] border-2 border-[#38bdf8] rounded-2xl p-4 relative">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <div class="flex items-center gap-2.5">
+                        <span id="qModalEmoji" class="text-3xl sm:text-4xl inline-flex items-center justify-center">📻</span>
+                        <div>
+                            <span id="qModalCpBadge" class="text-[10px] font-black uppercase bg-[#38bdf8] text-[#070a14] px-2.5 py-0.5 rounded-full">Checkpoint 1</span>
+                            <h3 id="qModalTitle" class="font-extrabold text-base sm:text-lg text-white">Petikan: Radio</h3>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 rounded-xl bg-[#1e1b4b] border border-[#38bdf8]/50 text-[#7dd3fc] font-extrabold text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-book-open text-[#fbbf24]"></i> Baca Petikan
+                    </span>
+                </div>
+                <p id="qModalPassage" class="text-sm sm:text-base font-bold text-[#e0f2fe] bg-[#070a14] p-3.5 rounded-xl border border-[#38bdf8]/40 leading-relaxed">
+                    Ini radio saya. Radio ini baharu. Radio ini hadiah daripada ibu. Radio ini berwarna merah jambu.
+                </p>
+            </div>
+
+            <!-- Bahagian Soalan (Diletakkan di BAWAH Petikan - 1 Percubaan Sahaja) -->
+            <div class="bg-[#0b1126] border-2 border-[#a855f7] rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between text-xs font-bold">
+                    <span id="qModalProgress" class="text-[#d8b4fe] bg-[#2e1065] px-3 py-1 rounded-full border border-[#a855f7]">Soalan 1 / 4</span>
+                    <span class="text-rose-400 font-extrabold"><i class="fa-solid fa-lock"></i> 1 Percubaan Sahaja</span>
+                </div>
+
+                <p id="qModalQuestionText" class="text-base sm:text-lg font-extrabold text-white">
+                    1. Ini apa?
+                </p>
+
+                <!-- Pilihan Jawapan A, B, C -->
+                <div id="qModalOptions" class="space-y-2.5 pt-1"></div>
+            </div>
+
+            <!-- Paparan Maklum Balas Betul / Salah -->
+            <div id="qModalFeedback" class="hidden p-3.5 rounded-xl text-center font-bold text-xs sm:text-sm"></div>
+
+            <!-- Butang Tutup Sementara -->
+            <div class="flex justify-end">
+                <button id="qModalCloseBtn" onclick="closeQuestionModal()" class="text-xs text-slate-400 hover:text-white font-bold px-3 py-1.5">
+                    <i class="fa-solid fa-xmark"></i> Tutup Sementara
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- SKRIN 3B: MODAL RAKAMAN BACAAN SEKSYEN 2 (#recordModal)    -->
+    <!-- ========================================================== -->
+    <div id="recordModal" class="hidden fixed inset-0 bg-[#04060e]/85 backdrop-blur-sm z-40 flex items-center justify-center p-3">
+        <div class="w-full max-w-xl cyber-card-purple p-5 sm:p-6 max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex items-center justify-between border-b border-[#a855f7]/40 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span id="recModalEmoji" class="text-3xl sm:text-4xl inline-flex items-center justify-center">📻</span>
+                    <div>
+                        <span id="recModalCpBadge" class="text-[10px] font-black uppercase bg-[#a855f7] text-white px-2.5 py-0.5 rounded-full">Checkpoint 1 / 5</span>
+                        <h3 id="recModalTitle" class="font-extrabold text-base sm:text-lg text-white">Kembara Rakaman Membaca: Radio</h3>
+                    </div>
+                </div>
+                <div class="bg-[#070a14] border border-[#fbbf24] px-3 py-1 rounded-xl text-xs font-black text-[#fbbf24]">
+                    ⏱️ <span id="recModalTimer">00:00</span>
+                </div>
+            </div>
+
+            <!-- Petikan Untuk Dibaca Dengan Paparan Kemajuan Setiap Ayat -->
+            <div class="bg-[#070a14] border-2 border-[#38bdf8] rounded-2xl p-4 space-y-2.5">
+                <div class="flex items-center justify-between gap-2">
+                    <p class="text-xs font-bold text-[#7dd3fc] uppercase tracking-wider">
+                        <i class="fa-solid fa-book-open-reader text-[#fbbf24]"></i> Baca semua ayat hingga selesai:
+                    </p>
+                    <span id="recSentenceProgressBadge" class="px-2.5 py-0.5 rounded-full bg-[#1e1b4b] border border-[#38bdf8] text-[#7dd3fc] text-[11px] font-extrabold">
+                        0 / 4 Ayat Selesai
+                    </span>
+                </div>
+                <div id="recModalSentencesList" class="space-y-2">
+                    <!-- Setiap ayat dipaparkan di sini dan bertukar hijau apabila selesai dibaca -->
+                </div>
+                <div id="recLiveTranscriptBox" class="hidden bg-[#0f172a] border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300">
+                    <span class="text-[#fbbf24] font-bold">Suara dikesan:</span> <span id="recLiveTranscriptText" class="italic">...</span>
+                </div>
+            </div>
+
+            <!-- Kawalan Rakaman Suara -->
+            <div class="bg-[#0b1126] border border-[#a855f7]/50 rounded-2xl p-4 space-y-3 text-center">
+                <button id="cpRecordBtn" onclick="toggleCheckpointVoiceRecording()" class="w-full py-3.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 transition shadow-lg">
+                    <i class="fa-solid fa-microphone"></i> <span id="cpRecordBtnText">Mula Rekod & Baca Petikan</span>
+                </button>
+
+                <p id="cpRecordStatus" class="text-xs font-bold text-slate-300">
+                    Tekan butang di atas dan baca kesemua ayat di atas sehingga selesai.
+                </p>
+
+                <div id="cpRecordPreview" class="hidden space-y-2 pt-2 border-t border-slate-700"></div>
+
+                <button id="cpCompleteRecordBtn" onclick="confirmCheckpointRecording()" class="hidden w-full py-3 btn-cyber-primary rounded-xl font-black text-sm uppercase flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-check"></i> Selesai Rekod! Terus ke Checkpoint Seterusnya
+                </button>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="closeRecordModal()" class="text-xs text-slate-400 hover:text-white font-bold px-3 py-1.5">
+                    <i class="fa-solid fa-xmark"></i> Tutup Sementara
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- SKRIN 4: CARTA KEDUDUKAN (#leaderboardModal)               -->
+    <!-- ========================================================== -->
+    <div id="leaderboardModal" class="hidden fixed inset-0 bg-[#04060e]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-md cyber-card p-5 sm:p-6 space-y-4 max-h-[88vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-2xl text-[#fbbf24]"></i>
+                    <h3 class="text-lg sm:text-xl font-black text-white uppercase">Carta Pemenang</h3>
+                </div>
+                <button onclick="closeLeaderboard()" class="text-2xl text-slate-400 hover:text-white">&times;</button>
+            </div>
+
+            <!-- Tab Carta Seksyen 1 vs Seksyen 2 -->
+            <div class="grid grid-cols-2 gap-2 bg-[#070a14] p-1 rounded-xl border border-slate-700">
+                <button id="lbTab1" onclick="renderLeaderboardTab(1)" class="py-1.5 rounded-lg text-xs font-extrabold bg-[#38bdf8] text-[#070a14]">
+                    Seksyen 1 (Soalan)
+                </button>
+                <button id="lbTab2" onclick="renderLeaderboardTab(2)" class="py-1.5 rounded-lg text-xs font-extrabold text-slate-300">
+                    Kembara Rakaman Membaca
+                </button>
+            </div>
+
+            <div id="leaderboardList" class="space-y-2"></div>
+
+            <button onclick="closeLeaderboard()" class="w-full py-2.5 btn-cyber-primary rounded-xl font-extrabold text-sm">
+                Tutup Carta
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- SKRIN 5: SIJIL PENCAPAIAN DIGITAL (#certificateModal)      -->
+    <!-- ========================================================== -->
+    <div id="certificateModal" class="hidden fixed inset-0 bg-[#04060e]/90 z-50 overflow-y-auto flex items-center justify-center p-3">
+        <div class="w-full max-w-2xl bg-[#fffef9] text-[#0f172a] rounded-3xl p-5 sm:p-8 border-4 sm:border-8 border-[#fbbf24] shadow-2xl text-center space-y-4 my-auto">
+            
+            <div class="border-2 sm:border-4 border-dashed border-[#0284c7] p-4 sm:p-6 rounded-2xl bg-gradient-to-b from-[#f0f9ff] to-[#ffffff] space-y-3">
+                <div class="inline-flex items-center gap-2 bg-[#0f172a] text-[#fbbf24] px-4 py-1.5 rounded-full font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow">
+                    <i class="fa-solid fa-award"></i> Sijil Pencapaian Digital Kembara Ilmu <i class="fa-solid fa-award"></i>
+                </div>
+
+                <p class="text-xs sm:text-sm font-bold text-[#0369a1] uppercase tracking-widest">
+                    Dengan Ini Diperakui Bahawa:
+                </p>
+
+                <div>
+                    <h2 id="certPlayerName" class="text-2xl sm:text-4xl font-black text-[#0f172a] underline decoration-[#fbbf24] decoration-4 underline-offset-4 uppercase">
+                        NAMA MURID
+                    </h2>
+                    <p id="certPlayerClass" class="text-sm sm:text-base font-extrabold text-[#0284c7] mt-1 uppercase">
+                        KELAS: 1 BESTARI
+                    </p>
+                </div>
+
+                <p id="certDescriptionText" class="text-xs sm:text-sm text-slate-700 font-semibold max-w-lg mx-auto leading-relaxed">
+                    Telah berjaya menamatkan cabaran merentasi kesemua <b>5 Checkpoint</b> dalam permainan pendidikan digital <b>KEMBARA ILMU (Bahasa Melayu Tahun 1)</b>!
+                </p>
+
+                <!-- Statistik Keputusan -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 bg-white p-3 sm:p-4 rounded-2xl border-2 border-[#38bdf8] shadow-sm my-2">
+                    <div>
+                        <span id="certStat1Label" class="block text-[10px] text-slate-500 font-bold uppercase">Jumlah Markah</span>
+                        <span id="certScore" class="text-lg sm:text-2xl font-black text-[#0284c7]">100 / 100</span>
+                    </div>
+                    <div class="border-x border-slate-200">
+                        <span class="block text-[10px] text-slate-500 font-bold uppercase">Syiling Emas</span>
+                        <span id="certCoins" class="text-lg sm:text-2xl font-black text-[#d97706]">25 🪙</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] text-slate-500 font-bold uppercase">Masa Diambil</span>
+                        <span id="certTime" class="text-lg sm:text-2xl font-black text-[#7e22ce]">01:45</span>
+                    </div>
+                </div>
+
+                <!-- Senarai Muat Turun Rakaman Suara (Jika Seksyen 2) -->
+                <div id="certRecordingsBox" class="hidden bg-[#f8fafc] border border-slate-300 rounded-xl p-3 text-left space-y-2 no-print">
+                    <p class="text-xs font-extrabold text-[#0f172a]"><i class="fa-solid fa-microphone-lines text-rose-600"></i> Rekod Bacaan Suara Anda (5 Checkpoint):</p>
+                    <div id="certRecordingsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-300 flex justify-between items-center text-[11px] sm:text-xs font-bold text-slate-600">
+                    <div class="text-left">
+                        <span class="block text-[9px] text-slate-400 uppercase">Tarikh Tamat:</span>
+                        <span id="certDate">20 November 2026</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-[9px] text-slate-400 uppercase">Pengesahan:</span>
+                        <span class="italic text-[#0f172a]">Kembara Ilmu • BM Tahun 1 🎓</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Butang Tindakan Sijil -->
+            <div class="flex flex-wrap justify-center gap-2.5 no-print pt-1">
+                <button onclick="window.print()" class="px-4 py-2.5 btn-cyber-primary rounded-xl font-extrabold text-xs sm:text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                </button>
+                <button onclick="openLeaderboard()" class="px-4 py-2.5 bg-[#a855f7] text-white rounded-xl font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-trophy"></i> Carta Pemenang
+                </button>
+                <button onclick="returnToSectionMenu()" class="px-4 py-2.5 btn-cyber-amber rounded-xl font-extrabold text-xs sm:text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-grid-2"></i> Pilih Seksyen Lain
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================================
+        // 1. KANDUNGAN MODUL PEMBELAJARAN (5 CHECKPOINT & 20 SOALAN)
+        // ==========================================================
+        const pinkRadioSVG = `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-12 sm:h-12 inline-block drop-shadow"><path d="M14 20 L48 10" stroke="#cbd5e1" stroke-width="3.5" stroke-linecap="round"/><circle cx="49" cy="10" r="3.5" fill="#fbbf24"/><rect x="8" y="20" width="48" height="34" rx="8" fill="#ec4899" stroke="#f9a8d4" stroke-width="2.5"/><rect x="14" y="25" width="36" height="8" rx="3" fill="#831843"/><rect x="17" y="27" width="18" height="4" rx="1.5" fill="#38bdf8"/><circle cx="22" cy="43" r="6.5" fill="#1e293b" stroke="#fbcfe8" stroke-width="2"/><circle cx="22" cy="43" r="2.5" fill="#f472b6"/><circle cx="42" cy="43" r="6.5" fill="#1e293b" stroke="#fbcfe8" stroke-width="2"/><circle cx="42" cy="43" r="2.5" fill="#f472b6"/></svg>`;
+
+        const lightBlueTeapotSVG = `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-12 sm:h-12 inline-block drop-shadow"><path d="M46 28 C56 26, 56 44, 46 42" fill="none" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round"/><path d="M18 36 L8 26 L12 23 L20 30" fill="#7dd3fc" stroke="#e0f2fe" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="32" cy="37" rx="16" ry="14" fill="#38bdf8" stroke="#bae6fd" stroke-width="2.5"/><path d="M21 25 Q32 18 43 25 Z" fill="#0284c7" stroke="#bae6fd" stroke-width="1.5"/><circle cx="32" cy="18" r="3.5" fill="#fbbf24"/><path d="M22 38 Q32 43 42 38" fill="none" stroke="#e0f2fe" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+
+        const checkpointsData = [
+            {
+                id: 1,
+                title: "Radio",
+                emoji: "📻",
+                customIconHtml: pinkRadioSVG,
+                x: 200,
+                y: 130,
+                passage: "Ini radio saya. Radio ini baharu. Radio ini hadiah daripada ibu. Radio ini berwarna merah jambu.",
+                questions: [
+                    { q: "1. Ini apa?", options: ["A. Radio 📻", "B. Telefon 📱", "C. Buku 📘"], answer: "A. Radio 📻" },
+                    { q: "2. Ini radio siapa?", options: ["A. Radio ibu", "B. Radio saya", "C. Radio adik"], answer: "B. Radio saya" },
+                    { q: "3. Radio ini berwarna apa?", options: ["A. Biru", "B. Kuning", "C. Merah jambu"], answer: "C. Merah jambu" },
+                    { q: "4. Radio ini hadiah daripada siapa?", options: ["A. Ibu", "B. Ayah", "C. Kakak"], answer: "A. Ibu" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Ceri",
+                emoji: "🍒",
+                x: 450,
+                y: 130,
+                passage: "Ini ceri. Nani beli ceri. Nani beri ceri kepada Salmi. Salmi suka hati.",
+                questions: [
+                    { q: "1. Ini buah apa?", options: ["A. Epal 🍎", "B. Ceri 🍒", "C. Pisang 🍌"], answer: "B. Ceri 🍒" },
+                    { q: "2. Siapa beli ceri?", options: ["A. Nani", "B. Salmi", "C. Rozi"], answer: "A. Nani" },
+                    { q: "3. Nani beri ceri kepada siapa?", options: ["A. Kamal", "B. Ibu", "C. Salmi"], answer: "C. Salmi" },
+                    { q: "4. Bagaimanakah perasaan Salmi?", options: ["A. Sedih", "B. Suka hati", "C. Marah"], answer: "B. Suka hati" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Cili Merah",
+                emoji: "🌶️",
+                x: 720,
+                y: 230,
+                passage: "Ini cili merah. Cili merah rasa pedas. Rozi beli cili di kedai Atan. Rozi simpan cili dalam peti ais.",
+                questions: [
+                    { q: "1. Ini apa?", options: ["A. Cili merah 🌶️", "B. Ceri merah 🍒", "C. Tomato 🍅"], answer: "A. Cili merah 🌶️" },
+                    { q: "2. Cili merah rasa apa?", options: ["A. Manis", "B. Pedas", "C. Masam"], answer: "B. Pedas" },
+                    { q: "3. Siapa beli cili di kedai Atan?", options: ["A. Atan", "B. Nani", "C. Rozi"], answer: "C. Rozi" },
+                    { q: "4. Cili disimpan di mana?", options: ["A. Dalam peti ais", "B. Atas meja", "C. Dalam bakul"], answer: "A. Dalam peti ais" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Buku Tulis",
+                emoji: "📘",
+                x: 520,
+                y: 440,
+                passage: "Ini buku tulis. Buku tulis ini tebal. Buku tulis ini warna biru. Kamal suka tulis dalam buku ini. Kamal simpan buku ini di dalam beg sekolah.",
+                questions: [
+                    { q: "1. Ini apa?", options: ["A. Buku cerita", "B. Buku tulis 📘", "C. Kamus"], answer: "B. Buku tulis 📘" },
+                    { q: "2. Buku tulis ini warna apa?", options: ["A. Merah", "B. Hijau", "C. Biru"], answer: "C. Biru" },
+                    { q: "3. Siapa suka tulis dalam buku ini?", options: ["A. Kamal", "B. Ahmad", "C. Salmi"], answer: "A. Kamal" },
+                    { q: "4. Di manakah Kamal simpan buku ini?", options: ["A. Atas meja", "B. Di dalam beg sekolah", "C. Dalam peti ais"], answer: "B. Di dalam beg sekolah" }
+                ]
+            },
+            {
+                id: 5,
+                title: "Teko Kopi",
+                emoji: "🫖",
+                customIconHtml: lightBlueTeapotSVG,
+                x: 210,
+                y: 440,
+                passage: "Ini teko kopi kesayangan Ahmad yang berwarna biru cerah. Ahmad membelinya di kedai pada hari Rabu untuk menghidangkan minuman panas kepada tetamu. Ibu membancuh kopi yang harum lalu menuangnya ke dalam teko ini. Selepas digunakan, Ahmad mencuci teko baharu ini dengan bersih supaya tahan lama. Teko ini diletakkan di atas dulang kayu dengan cermat agar tidak jatuh dan pecah.",
+                questions: [
+                    { q: "1. Mengapakah Ahmad membeli teko kopi baharu ini?", options: ["A. Untuk menghidangkan minuman panas kepada tetamu", "B. Untuk bermain di halaman rumah", "C. Untuk menyimpan air sejuk"], answer: "A. Untuk menghidangkan minuman panas kepada tetamu" },
+                    { q: "2. Apakah yang dilakukan oleh Ahmad selepas teko itu digunakan?", options: ["A. Menyimpannya di dalam peti ais", "B. Mencucinya dengan bersih supaya tahan lama", "C. Membiarkannya di atas lantai"], answer: "B. Mencucinya dengan bersih supaya tahan lama" },
+                    { q: "3. Mengapakah teko ini diletakkan dengan cermat di atas dulang kayu?", options: ["A. Supaya kopi cepat sejuk", "B. Supaya warnanya bertukar biru", "C. Agar teko tidak jatuh dan pecah"], answer: "C. Agar teko tidak jatuh dan pecah" },
+                    { q: "4. Bilakah Ahmad membeli teko kopi kesayangannya itu?", options: ["A. Pada hari Rabu", "B. Pada hari Ahad", "C. Pada hari Jumaat"], answer: "A. Pada hari Rabu" }
+                ]
+            }
+        ];
+
+        // Laluan berpandu berurutan (Start -> CP1 -> CP2 -> CP3 -> CP4 -> CP5)
+        const pathWaypoints = [
+            { x: 90, y: 270 },   // Titik Mula
+            { x: 90, y: 130 },
+            { x: 200, y: 130 },  // Checkpoint 1
+            { x: 450, y: 130 },  // Checkpoint 2
+            { x: 720, y: 130 },
+            { x: 720, y: 230 },  // Checkpoint 3
+            { x: 720, y: 440 },
+            { x: 520, y: 440 },  // Checkpoint 4
+            { x: 210, y: 440 }   // Checkpoint 5
+        ];
+
+        // ==========================================================
+        // 2. PEMBOLEHUBAH KEADAAN PERMAINAN (GAME STATE)
+        // ==========================================================
+        let playerName = "";
+        let playerClass = "";
+        let activeGameMode = 1; // 1 = Seksyen 1 (Soalan), 2 = Seksyen 2 (Rakaman Pantas)
+        let suitColor = "blue";
+        let currentAtmosphere = "sunset";
+        let score = 0;
+        let coins = 0;
+        let completedCheckpoints = [];
+        let activeCpIndex = null;
+        let activeQuestionIndex = 0;
+        let isQuestionLocked = false; // Kunci jawapan selepas 1 percubaan
+        let elapsedSeconds = 0;
+        let timerInterval = null;
+        let isModalOpen = false;
+        let lastBannerWarningTime = 0;
+        let gameLoopRunning = false;
+
+        // Simpanan & keadaan rakaman suara untuk Seksyen 2
+        let recordedBlobs = {}; // { 1: { url, title }, ... }
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecordingActive = false;
+        let currentCpRecorded = false;
+        let speechRecognition = null;
+        let cpSentences = [];
+        let cpSentencesCompleted = [];
+        let fullRecognizedSpeech = "";
+
+        // Watak Pemain 2D
+        let player = {
+            x: 90,
+            y: 270,
+            speed: 3.8,
+            targetX: null,
+            targetY: null,
+            stepPhase: 0,
+            facing: 1
+        };
+
+        const keys = {};
+        const dpad = { up: false, down: false, left: false, right: false };
+        let collectibles = [];
+
+        function generateCollectibles() {
+            collectibles = [];
+            const coinCoords = [
+                [90, 220], [90, 175], [140, 130], [260, 130], [310, 130],
+                [360, 130], [405, 130], [510, 130], [565, 130], [620, 130],
+                [675, 130], [720, 175], [720, 285], [720, 335], [720, 385],
+                [670, 440], [620, 440], [570, 440], [460, 440], [410, 440],
+                [360, 440], [310, 440], [265, 440], [160, 270], [130, 130]
+            ];
+            coinCoords.forEach(([cx, cy]) => {
+                collectibles.push({ type: 'coin', x: cx, y: cy, collected: false, value: 1 });
+            });
+            collectibles.push({ type: 'key', x: 335, y: 130, collected: false, value: 2 });
+            collectibles.push({ type: 'key', x: 645, y: 440, collected: false, value: 2 });
+            collectibles.push({ type: 'mystery', x: 590, y: 175, collected: false, value: 0 });
+            collectibles.push({ type: 'mystery', x: 385, y: 390, collected: false, value: 0 });
+        }
+
+        // ==========================================================
+        // 3. SISTEM AUDIO SINTESIS (WEB AUDIO API) - TANPA SUARA BACAAN
+        // ==========================================================
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let bgmPlaying = false;
+        let bgmTimer = null;
+        let stepCooldown = 0;
+
+        function ensureAudio() {
+            if (!audioCtx) audioCtx = new AudioContextClass();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSoundFX(type) {
+            try {
+                ensureAudio();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                if (type === 'step') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(190, now);
+                    osc.frequency.exponentialRampToValueAtTime(110, now + 0.05);
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.05);
+                } else if (type === 'coin') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(987.77, now);
+                    osc.frequency.setValueAtTime(1318.51, now + 0.07);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.22);
+                } else if (type === 'correct') {
+                    // Fanfare kemenangan ceria, berharmoni dan lebih kuat supaya murid teruja
+                    const melodyNotes = [
+                        { freq: 523.25, time: 0.00, dur: 0.14, gain: 0.34 }, // C5
+                        { freq: 659.25, time: 0.09, dur: 0.14, gain: 0.34 }, // E5
+                        { freq: 783.99, time: 0.18, dur: 0.14, gain: 0.36 }, // G5
+                        { freq: 1046.50, time: 0.27, dur: 0.38, gain: 0.42 }, // C6
+                        { freq: 1318.51, time: 0.34, dur: 0.42, gain: 0.32 }  // E6 harmoni berkilau
+                    ];
+                    melodyNotes.forEach((n) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(n.freq, now + n.time);
+                        g.gain.setValueAtTime(n.gain, now + n.time);
+                        g.gain.exponentialRampToValueAtTime(0.008, now + n.time + n.dur);
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.start(now + n.time);
+                        o.stop(now + n.time + n.dur);
+                    });
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(210, now);
+                    osc.frequency.linearRampToValueAtTime(145, now + 0.24);
+                    gain.gain.setValueAtTime(0.13, now);
+                    gain.gain.exponentialRampToValueAtTime(0.005, now + 0.24);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.24);
+                }
+            } catch (e) {}
+        }
+
+        function toggleBGM() {
+            const btn = document.getElementById('bgmToggleBtn');
+            if (bgmPlaying) {
+                bgmPlaying = false;
+                clearInterval(bgmTimer);
+                btn.classList.remove('bg-[#38bdf8]', 'text-[#070a14]');
+                btn.classList.add('bg-[#0f172a]', 'text-[#38bdf8]');
+            } else {
+                ensureAudio();
+                bgmPlaying = true;
+                btn.classList.remove('bg-[#0f172a]', 'text-[#38bdf8]');
+                btn.classList.add('bg-[#38bdf8]', 'text-[#070a14]');
+
+                const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 293.66, 392.00];
+                let idx = 0;
+                bgmTimer = setInterval(() => {
+                    if (!bgmPlaying) return;
+                    try {
+                        const now = audioCtx.currentTime;
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.type = 'sine';
+                        o.frequency.value = notes[idx % notes.length];
+                        g.gain.setValueAtTime(0.04, now);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                        o.connect(g); g.connect(audioCtx.destination);
+                        o.start(now); o.stop(now + 0.35);
+                        idx++;
+                    } catch (e) {}
+                }, 420);
+            }
+        }
+
+        // ==========================================================
+        // 4. NAVIGASI PAPARAN UTAMA -> PILIHAN SEKSYEN -> PERMAINAN
+        // ==========================================================
+        function selectSuitColor(color) {
+            suitColor = color;
+            const blueBtn = document.getElementById('suitBlueBtn');
+            const redBtn = document.getElementById('suitRedBtn');
+            const hudAvatar = document.getElementById('hudAvatarCircle');
+
+            if (color === 'blue') {
+                blueBtn.className = "py-2 px-2.5 rounded-xl border-2 border-[#38bdf8] bg-[#1e3a8a]/60 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition";
+                redBtn.className = "py-2 px-2.5 rounded-xl border-2 border-slate-700 bg-[#0f172a] text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 opacity-80 transition";
+                if (hudAvatar) hudAvatar.style.backgroundColor = "#2563eb";
+            } else {
+                redBtn.className = "py-2 px-2.5 rounded-xl border-2 border-[#ef4444] bg-[#7f1d1d]/60 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition";
+                blueBtn.className = "py-2 px-2.5 rounded-xl border-2 border-slate-700 bg-[#0f172a] text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 opacity-80 transition";
+                if (hudAvatar) hudAvatar.style.backgroundColor = "#ef4444";
+            }
+        }
+
+        function changeAtmosphere(val) {
+            currentAtmosphere = val;
+            const loginSel = document.getElementById('loginAtmosphereSelect');
+            const hudSel = document.getElementById('hudAtmosphereSelect');
+            if (loginSel) loginSel.value = val;
+            if (hudSel) hudSel.value = val;
+        }
+
+        function setDpad(dir, active) {
+            dpad[dir] = active;
+            if (active) player.targetX = null;
+        }
+
+        function validateLoginFields() {
+            const nameInput = document.getElementById('playerNameInput');
+            const classInput = document.getElementById('playerClassInput');
+            const err = document.getElementById('loginErrorMsg');
+
+            // Halang ruang kosong di hadapan (leading spaces)
+            if (nameInput.value.startsWith(' ')) {
+                nameInput.value = nameInput.value.trimStart();
+            }
+            if (classInput.value.startsWith(' ')) {
+                classInput.value = classInput.value.trimStart();
+            }
+
+            if (nameInput.value.trim().length > 0 && classInput.value.trim().length > 0) {
+                err.classList.add('hidden');
+            }
+        }
+
+        function goToSectionSelection() {
+            const nameInput = document.getElementById('playerNameInput');
+            const classInput = document.getElementById('playerClassInput');
+            const nameVal = nameInput.value.replace(/\s+/g, ' ').trim();
+            const classVal = classInput.value.replace(/\s+/g, ' ').trim();
+            const err = document.getElementById('loginErrorMsg');
+
+            if (!nameVal || !classVal) {
+                err.classList.remove('hidden');
+                if (!nameVal) nameInput.focus();
+                else classInput.focus();
+                return;
+            }
+            err.classList.add('hidden');
+            nameInput.value = nameVal;
+            classInput.value = classVal;
+            playerName = nameVal;
+            playerClass = classVal;
+
+            document.getElementById('welcomeStudentBadge').innerText = `Pengembara: ${playerName} (${playerClass})`;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('sectionSelectScreen').classList.remove('hidden');
+        }
+
+        function backToLogin() {
+            stopTimer();
+            document.getElementById('sectionSelectScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        function returnToSectionMenu() {
+            stopTimer();
+            isModalOpen = false;
+            document.getElementById('questionModal').classList.add('hidden');
+            document.getElementById('recordModal').classList.add('hidden');
+            document.getElementById('certificateModal').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('sectionSelectScreen').classList.remove('hidden');
+        }
+
+        function startMode(modeNum) {
+            activeGameMode = modeNum;
+            score = 0;
+            coins = 0;
+            completedCheckpoints = [];
+            recordedBlobs = {};
+            elapsedSeconds = 0;
+            isModalOpen = false;
+            player.x = 90;
+            player.y = 270;
+            player.targetX = null;
+            player.targetY = null;
+
+            generateCollectibles();
+
+            document.getElementById('hudPlayerName').innerText = playerName;
+            document.getElementById('hudPlayerClass').innerText = `Kelas: ${playerClass}`;
+            document.getElementById('hudTimer').innerText = "00:00";
+
+            const modeBadge = document.getElementById('hudModeBadge');
+            const scoreBox = document.getElementById('hudScoreBox');
+
+            if (modeNum === 1) {
+                modeBadge.innerText = "Seksyen 1: Soalan";
+                modeBadge.className = "bg-[#1e1b4b] border border-[#38bdf8] text-[#7dd3fc] px-2.5 py-1 rounded-lg text-xs font-extrabold";
+                scoreBox.classList.remove('hidden');
+            } else {
+                modeBadge.innerText = "Kembara Rakaman Membaca";
+                modeBadge.className = "bg-[#2e1065] border border-[#a855f7] text-[#e9d5ff] px-2.5 py-1 rounded-lg text-xs font-extrabold";
+                scoreBox.classList.add('hidden');
+            }
+
+            updateHUD();
+
+            document.getElementById('sectionSelectScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            startTimer();
+            if (!gameLoopRunning) {
+                gameLoopRunning = true;
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function startTimer() {
+            stopTimer();
+            timerInterval = setInterval(() => {
+                elapsedSeconds++;
+                const formatted = formatTime(elapsedSeconds);
+                const hudT = document.getElementById('hudTimer');
+                const recT = document.getElementById('recModalTimer');
+                if (hudT) hudT.innerText = formatted;
+                if (recT) recT.innerText = formatted;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateHUD() {
+            document.getElementById('hudCoins').innerText = coins;
+            document.getElementById('hudScore').innerText = score;
+            document.getElementById('hudCheckpoints').innerText = completedCheckpoints.length;
+
+            const bannerText = document.getElementById('guideBannerText');
+            const nextId = completedCheckpoints.length + 1;
+            if (nextId <= checkpointsData.length) {
+                const nextCp = checkpointsData[nextId - 1];
+                const actionWord = activeGameMode === 1 ? "menjawab soalan" : "merakam bacaan";
+                bannerText.innerHTML = `Gerakkan watak ke <span class="text-[#fbbf24]">Checkpoint ${nextCp.id} (${nextCp.title})</span> untuk ${actionWord}!`;
+            } else {
+                bannerText.innerHTML = `<span class="text-emerald-400">🎉 Tahniah! Semua 5 Checkpoint telah selesai!</span>`;
+            }
+        }
+
+        // ==========================================================
+        // 5. ENJIN KANVAS 2D & KAWALAN WATAK (KEYBOARD, TOUCH, D-PAD)
+        // ==========================================================
+        const canvas = document.getElementById('mazeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        window.addEventListener('keydown', (e) => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code) && !isModalOpen && !document.getElementById('gameScreen').classList.contains('hidden')) {
+                e.preventDefault();
+            }
+            keys[e.key.toLowerCase()] = true;
+            if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) {
+                player.targetX = null;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+        });
+
+        function handleCanvasPointer(clientX, clientY) {
+            if (isModalOpen) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            player.targetX = (clientX - rect.left) * scaleX;
+            player.targetY = (clientY - rect.top) * scaleY;
+        }
+
+        canvas.addEventListener('mousedown', (e) => handleCanvasPointer(e.clientX, e.clientY));
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                handleCanvasPointer(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        function updatePlayerMovement() {
+            if (isModalOpen) return;
+            let dx = 0;
+            let dy = 0;
+
+            if (keys['w'] || keys['arrowup'] || dpad.up) dy -= player.speed;
+            if (keys['s'] || keys['arrowdown'] || dpad.down) dy += player.speed;
+            if (keys['a'] || keys['arrowleft'] || dpad.left) dx -= player.speed;
+            if (keys['d'] || keys['arrowright'] || dpad.right) dx += player.speed;
+
+            if (dx === 0 && dy === 0 && player.targetX !== null && player.targetY !== null) {
+                const diffX = player.targetX - player.x;
+                const diffY = player.targetY - player.y;
+                const dist = Math.hypot(diffX, diffY);
+                if (dist > 5) {
+                    dx = (diffX / dist) * player.speed;
+                    dy = (diffY / dist) * player.speed;
+                } else {
+                    player.targetX = null;
+                    player.targetY = null;
+                }
+            }
+
+            if (dx !== 0 || dy !== 0) {
+                player.x = Math.max(35, Math.min(canvas.width - 35, player.x + dx));
+                player.y = Math.max(35, Math.min(canvas.height - 35, player.y + dy));
+                if (dx < 0) player.facing = -1;
+                if (dx > 0) player.facing = 1;
+                player.stepPhase += 0.25;
+
+                if (stepCooldown <= 0) {
+                    playSoundFX('step');
+                    stepCooldown = 14;
+                }
+            }
+            if (stepCooldown > 0) stepCooldown--;
+
+            // Semak kutipan syiling & item
+            collectibles.forEach(item => {
+                if (!item.collected && Math.hypot(player.x - item.x, player.y - item.y) < 30) {
+                    item.collected = true;
+                    if (item.value > 0) {
+                        coins += item.value;
+                        updateHUD();
+                    }
+                    playSoundFX('coin');
+                }
+            });
+
+            // Semak perlanggaran dengan Checkpoint
+            checkpointsData.forEach((cp, idx) => {
+                if (Math.hypot(player.x - cp.x, player.y - cp.y) < 38) {
+                    if (completedCheckpoints.includes(cp.id)) return;
+
+                    const expectedCpId = completedCheckpoints.length + 1;
+                    if (cp.id !== expectedCpId) {
+                        const now = Date.now();
+                        if (now - lastBannerWarningTime > 1500) {
+                            lastBannerWarningTime = now;
+                            playSoundFX('wrong');
+                            const bannerText = document.getElementById('guideBannerText');
+                            bannerText.innerHTML = `<span class="text-rose-400">🔒 Checkpoint ${cp.id} masih berkunci! Selesaikan Checkpoint ${expectedCpId} terlebih dahulu.</span>`;
+                        }
+                        return;
+                    }
+
+                    player.targetX = null;
+                    player.targetY = null;
+                    if (activeGameMode === 1) {
+                        openQuestionModal(idx);
+                    } else {
+                        openRecordModal(idx);
+                    }
+                }
+            });
+        }
+
+        function drawGameCanvas() {
+            // Latar belakang mengikut suasana masa
+            let bgTop = "#070a14", bgBot = "#131b3a", gridColor = "rgba(56, 189, 248, 0.14)";
+            if (currentAtmosphere === "morning") {
+                bgTop = "#2e1065"; bgBot = "#7c2d12"; gridColor = "rgba(251, 191, 36, 0.18)";
+            } else if (currentAtmosphere === "noon") {
+                bgTop = "#0369a1"; bgBot = "#0f172a"; gridColor = "rgba(125, 211, 252, 0.22)";
+            }
+
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, bgTop);
+            grad.addColorStop(1, bgBot);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid Siber
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = 1;
+            for (let gx = 0; gx < canvas.width; gx += 45) {
+                ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, canvas.height); ctx.stroke();
+            }
+            for (let gy = 0; gy < canvas.height; gy += 45) {
+                ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(canvas.width, gy); ctx.stroke();
+            }
+
+            // Laluan Berpandu Neon
+            ctx.save();
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.22)";
+            ctx.lineWidth = 28;
+            ctx.beginPath();
+            pathWaypoints.forEach((pt, i) => i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y));
+            ctx.stroke();
+
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 4;
+            ctx.setLineDash([12, 10]);
+            ctx.beginPath();
+            pathWaypoints.forEach((pt, i) => i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y));
+            ctx.stroke();
+            ctx.restore();
+
+            // Lukis Item Boleh Kumpul
+            collectibles.forEach(item => {
+                if (item.collected) return;
+                ctx.font = "22px Fredoka";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                if (item.type === 'coin') {
+                    ctx.fillStyle = "#fbbf24";
+                    ctx.beginPath();
+                    ctx.arc(item.x, item.y, 11, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = "#92400e";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.fillStyle = "#78350f";
+                    ctx.font = "bold 12px Fredoka";
+                    ctx.fillText("$", item.x, item.y + 1);
+                } else if (item.type === 'key') {
+                    ctx.fillText("🔑", item.x, item.y);
+                } else {
+                    ctx.fillText("🎁", item.x, item.y);
+                }
+            });
+
+            // Lukis 5 Checkpoint
+            const nextExpectedId = completedCheckpoints.length + 1;
+            checkpointsData.forEach(cp => {
+                const isDone = completedCheckpoints.includes(cp.id);
+                const isUnlocked = cp.id === nextExpectedId;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cp.x, cp.y, 32, 0, Math.PI * 2);
+                ctx.fillStyle = isDone ? "rgba(16, 185, 129, 0.25)" : isUnlocked ? "rgba(56, 189, 248, 0.28)" : "rgba(15, 23, 42, 0.75)";
+                ctx.fill();
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = isDone ? "#10b981" : isUnlocked ? "#fbbf24" : "#64748b";
+                ctx.stroke();
+
+                ctx.font = "26px Fredoka";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                if (isDone) {
+                    ctx.fillText("✅", cp.x, cp.y - 2);
+                } else if (!isUnlocked) {
+                    ctx.fillText("🔒", cp.x, cp.y - 2);
+                } else if (cp.id === 1) {
+                    // Lukis Radio Merah Jambu pada Kanvas
+                    ctx.save();
+                    ctx.translate(cp.x, cp.y - 1);
+                    ctx.strokeStyle = "#cbd5e1";
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(-10, -10);
+                    ctx.lineTo(10, -17);
+                    ctx.stroke();
+                    ctx.fillStyle = "#ec4899";
+                    ctx.strokeStyle = "#f9a8d4";
+                    ctx.lineWidth = 1.8;
+                    ctx.beginPath();
+                    ctx.roundRect(-15, -10, 30, 21, 5);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = "#831843";
+                    ctx.fillRect(-11, -7, 22, 5);
+                    ctx.fillStyle = "#1e293b";
+                    ctx.beginPath();
+                    ctx.arc(-7, 4, 4, 0, Math.PI * 2);
+                    ctx.arc(7, 4, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "#f472b6";
+                    ctx.beginPath();
+                    ctx.arc(-7, 4, 1.5, 0, Math.PI * 2);
+                    ctx.arc(7, 4, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                } else if (cp.id === 5) {
+                    // Lukis Teko Kopi Biru Cerah pada Kanvas
+                    ctx.save();
+                    ctx.translate(cp.x, cp.y);
+                    ctx.strokeStyle = "#38bdf8";
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(9, 1, 6, -Math.PI / 2, Math.PI / 2);
+                    ctx.stroke();
+                    ctx.fillStyle = "#7dd3fc";
+                    ctx.beginPath();
+                    ctx.moveTo(-10, 0);
+                    ctx.lineTo(-17, -7);
+                    ctx.lineTo(-14, -9);
+                    ctx.lineTo(-8, -3);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = "#38bdf8";
+                    ctx.strokeStyle = "#bae6fd";
+                    ctx.lineWidth = 1.8;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 2, 11, 9.5, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = "#fbbf24";
+                    ctx.beginPath();
+                    ctx.arc(0, -9, 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                } else {
+                    ctx.fillText(cp.emoji, cp.x, cp.y - 2);
+                }
+
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 12px Fredoka";
+                ctx.fillText(`CP ${cp.id}: ${cp.title}`, cp.x, cp.y + 44);
+                ctx.restore();
+            });
+
+            // Lukis Watak Pengembara 2D
+            ctx.save();
+            ctx.translate(player.x, player.y);
+
+            // Aura cahaya bawah kaki
+            ctx.fillStyle = "rgba(56, 189, 248, 0.35)";
+            ctx.beginPath();
+            ctx.ellipse(0, 22, 18, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Animasi kaki melangkah
+            const legOffset = Math.sin(player.stepPhase) * 5;
+            ctx.fillStyle = "#1e293b";
+            ctx.fillRect(-9, 10 + legOffset, 6, 11);
+            ctx.fillRect(3, 10 - legOffset, 6, 11);
+
+            // Beg galas
+            ctx.fillStyle = "#d97706";
+            ctx.fillRect(player.facing === 1 ? -15 : 8, -6, 7, 15);
+
+            // Baju mengikut pilihan warna
+            ctx.fillStyle = suitColor === "blue" ? "#2563eb" : "#ef4444";
+            ctx.beginPath();
+            ctx.roundRect(-10, -8, 20, 20, 6);
+            ctx.fill();
+
+            // Kepala
+            ctx.fillStyle = "#fde68a";
+            ctx.beginPath();
+            ctx.arc(0, -17, 11, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Topi kuning
+            ctx.fillStyle = "#fbbf24";
+            ctx.beginPath();
+            ctx.arc(0, -21, 11, Math.PI, 0);
+            ctx.fill();
+            ctx.fillRect(player.facing === 1 ? -4 : -13, -22, 17, 4);
+
+            // Mata
+            ctx.fillStyle = "#0f172a";
+            ctx.beginPath();
+            ctx.arc(player.facing === 1 ? 4 : -4, -17, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function gameLoop() {
+            updatePlayerMovement();
+            drawGameCanvas();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // ==========================================================
+        // 6. SEKSYEN 1: MODAL PETIKAN & SOALAN (1 PERCUBAAN SAHAJA)
+        // ==========================================================
+        function openQuestionModal(cpIdx) {
+            isModalOpen = true;
+            activeCpIndex = cpIdx;
+            activeQuestionIndex = 0;
+            isQuestionLocked = false;
+
+            const cp = checkpointsData[cpIdx];
+            const emojiEl = document.getElementById('qModalEmoji');
+            if (cp.customIconHtml) {
+                emojiEl.innerHTML = cp.customIconHtml;
+            } else {
+                emojiEl.innerText = cp.emoji;
+            }
+            document.getElementById('qModalCpBadge').innerText = `Checkpoint ${cp.id} / 5`;
+            document.getElementById('qModalTitle').innerText = `Petikan: ${cp.title}`;
+            document.getElementById('qModalPassage').innerText = cp.passage;
+
+            renderCurrentQuestion();
+            document.getElementById('questionModal').classList.remove('hidden');
+        }
+
+        function renderCurrentQuestion() {
+            const cp = checkpointsData[activeCpIndex];
+            const qObj = cp.questions[activeQuestionIndex];
+            isQuestionLocked = false;
+
+            document.getElementById('qModalProgress').innerText = `Soalan ${activeQuestionIndex + 1} / ${cp.questions.length}`;
+            document.getElementById('qModalQuestionText').innerText = qObj.q;
+
+            const fb = document.getElementById('qModalFeedback');
+            fb.classList.add('hidden');
+            fb.innerText = "";
+
+            const optionsEl = document.getElementById('qModalOptions');
+            optionsEl.innerHTML = "";
+
+            qObj.options.forEach(optText => {
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.className = "w-full text-left px-4 py-3 rounded-xl bg-[#070a14] hover:bg-[#1e1b4b] border-2 border-[#38bdf8]/50 text-white font-bold text-sm sm:text-base transition flex items-center justify-between";
+                btn.innerText = optText;
+                btn.onclick = () => selectOption(optText, btn);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function selectOption(chosenOption, clickedBtn) {
+            if (isQuestionLocked) return;
+            isQuestionLocked = true;
+
+            const cp = checkpointsData[activeCpIndex];
+            const qObj = cp.questions[activeQuestionIndex];
+            const isCorrect = chosenOption === qObj.answer;
+            const fb = document.getElementById('qModalFeedback');
+
+            // Kunci semua butang pilihan selepas 1 percubaan
+            const allBtns = document.getElementById('qModalOptions').querySelectorAll('button');
+            allBtns.forEach(b => {
+                b.disabled = true;
+                if (b.innerText === qObj.answer) {
+                    b.className = "w-full text-left px-4 py-3 rounded-xl bg-emerald-950 border-2 border-emerald-400 text-emerald-200 font-extrabold text-sm sm:text-base flex items-center justify-between";
+                }
+            });
+
+            fb.classList.remove('hidden');
+            if (isCorrect) {
+                score += 5;
+                updateHUD();
+                playSoundFX('correct');
+                fb.className = "p-3.5 rounded-xl text-center font-extrabold text-xs sm:text-sm bg-emerald-950/90 border border-emerald-400 text-emerald-300";
+                fb.innerHTML = `✅ Tahniah! Jawapan tepat (+5 Markah).`;
+            } else {
+                playSoundFX('wrong');
+                clickedBtn.className = "w-full text-left px-4 py-3 rounded-xl bg-rose-950 border-2 border-rose-500 text-rose-200 font-extrabold text-sm sm:text-base flex items-center justify-between";
+                fb.className = "p-3.5 rounded-xl text-center font-extrabold text-xs sm:text-sm bg-rose-950/90 border border-rose-400 text-rose-300";
+                fb.innerHTML = `❌ Kurang tepat. Jawapan sebenar ialah: <b>${qObj.answer}</b>`;
+            }
+
+            setTimeout(() => {
+                if (activeQuestionIndex + 1 < cp.questions.length) {
+                    activeQuestionIndex++;
+                    renderCurrentQuestion();
+                } else {
+                    if (!completedCheckpoints.includes(cp.id)) {
+                        completedCheckpoints.push(cp.id);
+                    }
+                    document.getElementById('questionModal').classList.add('hidden');
+                    isModalOpen = false;
+                    updateHUD();
+
+                    if (completedCheckpoints.length === checkpointsData.length) {
+                        completeAllCheckpoints();
+                    }
+                }
+            }, 1350);
+        }
+
+        function closeQuestionModal() {
+            document.getElementById('questionModal').classList.add('hidden');
+            isModalOpen = false;
+            player.y += 28;
+        }
+
+        // ==========================================================
+        // 7. SEKSYEN 2: MODAL KEMBARA RAKAMAN MEMBACA
+        // ==========================================================
+        function openRecordModal(cpIdx) {
+            isModalOpen = true;
+            activeCpIndex = cpIdx;
+            currentCpRecorded = false;
+            isRecordingActive = false;
+
+            const cp = checkpointsData[cpIdx];
+            cpSentences = cp.passage.split('.').map(s => s.trim()).filter(Boolean).map(s => s + '.');
+            cpSentencesCompleted = new Array(cpSentences.length).fill(false);
+            fullRecognizedSpeech = "";
+
+            const recEmojiEl = document.getElementById('recModalEmoji');
+            if (cp.customIconHtml) {
+                recEmojiEl.innerHTML = cp.customIconHtml;
+            } else {
+                recEmojiEl.innerText = cp.emoji;
+            }
+            document.getElementById('recModalCpBadge').innerText = `Checkpoint ${cp.id} / 5`;
+            document.getElementById('recModalTitle').innerText = `Kembara Rakaman Membaca: ${cp.title}`;
+            document.getElementById('recModalTimer').innerText = formatTime(elapsedSeconds);
+
+            const btn = document.getElementById('cpRecordBtn');
+            const btnText = document.getElementById('cpRecordBtnText');
+            const statusEl = document.getElementById('cpRecordStatus');
+            const previewEl = document.getElementById('cpRecordPreview');
+            const doneBtn = document.getElementById('cpCompleteRecordBtn');
+
+            btn.disabled = false;
+            btn.className = "w-full py-3.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2 transition shadow-lg";
+            btnText.innerText = "Mula Rekod & Baca Petikan";
+            statusEl.innerHTML = "Tekan butang di atas dan baca kesemua ayat di atas sehingga selesai.";
+            previewEl.classList.add('hidden');
+            previewEl.innerHTML = "";
+            doneBtn.classList.add('hidden');
+            document.getElementById('recLiveTranscriptBox').classList.add('hidden');
+
+            renderRecordSentencesUI();
+            document.getElementById('recordModal').classList.remove('hidden');
+        }
+
+        function renderRecordSentencesUI() {
+            const listEl = document.getElementById('recModalSentencesList');
+            const badgeEl = document.getElementById('recSentenceProgressBadge');
+            if (!listEl) return;
+
+            const doneCount = cpSentencesCompleted.filter(Boolean).length;
+            if (badgeEl) {
+                badgeEl.innerText = `${doneCount} / ${cpSentences.length} Ayat Selesai`;
+            }
+
+            listEl.innerHTML = "";
+            cpSentences.forEach((sentence, idx) => {
+                const isDone = cpSentencesCompleted[idx];
+                const row = document.createElement('div');
+                row.className = isDone
+                    ? "p-2.5 rounded-xl bg-emerald-950/80 border border-emerald-400 text-emerald-200 font-bold text-xs sm:text-sm flex items-center justify-between gap-2 transition"
+                    : "p-2.5 rounded-xl bg-[#0f172a] border border-slate-700 text-[#e0f2fe] font-bold text-xs sm:text-sm flex items-center justify-between gap-2 transition";
+                row.innerHTML = `
+                    <span>${idx + 1}. ${sentence}</span>
+                    <span class="shrink-0 text-xs font-extrabold ${isDone ? 'text-emerald-400' : 'text-slate-400'}">
+                        ${isDone ? '✅ Selesai' : '⏳ Belum'}
+                    </span>
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        function evaluateReadSentences(spokenText) {
+            const cleanSpoken = spokenText.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+            const spokenWords = new Set(cleanSpoken.split(/\s+/).filter(Boolean));
+
+            let changed = false;
+            cpSentences.forEach((sentence, idx) => {
+                if (cpSentencesCompleted[idx]) return;
+                const cleanSent = sentence.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+                const targetWords = cleanSent.split(/\s+/).filter(Boolean);
+                if (targetWords.length === 0) return;
+
+                let matched = 0;
+                targetWords.forEach(w => {
+                    if (spokenWords.has(w)) matched++;
+                });
+
+                if (matched / targetWords.length >= 0.65) {
+                    cpSentencesCompleted[idx] = true;
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                renderRecordSentencesUI();
+            }
+        }
+
+        function closeRecordModal() {
+            if (isRecordingActive && mediaRecorder && mediaRecorder.state === 'recording') {
+                if (speechRecognition) {
+                    try { speechRecognition.stop(); } catch (e) {}
+                }
+                mediaRecorder.stop();
+            }
+            document.getElementById('recordModal').classList.add('hidden');
+            isModalOpen = false;
+            player.y += 28;
+        }
+
+        async function toggleCheckpointVoiceRecording() {
+            if (currentCpRecorded) return; // Kunci: hanya 1 kali rekod sahaja dibenarkan
+
+            const cp = checkpointsData[activeCpIndex];
+            const btn = document.getElementById('cpRecordBtn');
+            const btnText = document.getElementById('cpRecordBtnText');
+            const statusEl = document.getElementById('cpRecordStatus');
+            const previewEl = document.getElementById('cpRecordPreview');
+            const doneBtn = document.getElementById('cpCompleteRecordBtn');
+
+            if (isRecordingActive && mediaRecorder && mediaRecorder.state === 'recording') {
+                if (speechRecognition) {
+                    try { speechRecognition.stop(); } catch (e) {}
+                }
+                mediaRecorder.stop();
+                return;
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioChunks = [];
+                fullRecognizedSpeech = "";
+                cpSentencesCompleted = new Array(cpSentences.length).fill(false);
+                renderRecordSentencesUI();
+
+                isRecordingActive = true;
+                mediaRecorder = new MediaRecorder(stream);
+
+                // Mulakan pengecaman pertuturan (SpeechRecognition) untuk menyemak bacaan setiap ayat
+                const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognitionAPI) {
+                    speechRecognition = new SpeechRecognitionAPI();
+                    speechRecognition.lang = 'ms-MY';
+                    speechRecognition.continuous = true;
+                    speechRecognition.interimResults = true;
+
+                    document.getElementById('recLiveTranscriptBox').classList.remove('hidden');
+                    document.getElementById('recLiveTranscriptText').innerText = "Mendengar bacaan anda...";
+
+                    speechRecognition.onresult = (event) => {
+                        let interimText = "";
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            const txt = event.results[i][0].transcript;
+                            if (event.results[i].isFinal) {
+                                fullRecognizedSpeech += " " + txt;
+                            } else {
+                                interimText += txt;
+                            }
+                        }
+                        const combined = (fullRecognizedSpeech + " " + interimText).trim();
+                        document.getElementById('recLiveTranscriptText').innerText = combined || "...";
+                        evaluateReadSentences(combined);
+                    };
+
+                    speechRecognition.onerror = () => {};
+                    try { speechRecognition.start(); } catch (e) {}
+                }
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    isRecordingActive = false;
+                    if (speechRecognition) {
+                        try { speechRecognition.stop(); } catch (e) {}
+                    }
+                    stream.getTracks().forEach(t => t.stop());
+
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const url = URL.createObjectURL(blob);
+                    recordedBlobs[cp.id] = { url, title: cp.title };
+
+                    // Tandakan semua ayat selesai & kunci rakaman supaya hanya 1 kali rekod sahaja
+                    cpSentencesCompleted = new Array(cpSentences.length).fill(true);
+                    renderRecordSentencesUI();
+                    currentCpRecorded = true;
+
+                    previewEl.classList.remove('hidden');
+                    previewEl.innerHTML = `<audio controls src="${url}" class="w-full h-9 rounded-lg"></audio>`;
+
+                    btn.disabled = true;
+                    btn.className = "w-full py-3 px-4 rounded-xl bg-emerald-900/70 border border-emerald-500 text-emerald-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed";
+                    btnText.innerText = "✅ Rakaman Selesai";
+                    statusEl.innerHTML = `<span class="text-emerald-400">🎉 Rakaman bacaan telah disimpan! Tekan butang di bawah untuk terus ke checkpoint seterusnya.</span>`;
+                    doneBtn.classList.remove('hidden');
+                };
+
+                mediaRecorder.start();
+                btn.className = "w-full py-3.5 px-4 rounded-xl recording-active bg-amber-500 text-[#070a14] font-black text-sm sm:text-base flex items-center justify-center gap-2 transition shadow-lg";
+                btnText.innerText = "Berhenti & Simpan Rakaman";
+                statusEl.innerHTML = `<span class="text-rose-400 animate-pulse">🔴 Sedang merakam... Baca petikan hingga selesai, kemudian tekan berhenti!</span>`;
+                doneBtn.classList.add('hidden');
+            } catch (err) {
+                statusEl.innerHTML = `<span class="text-amber-400">⚠️ Mikrofon tidak dibenarkan oleh pelayar. Sila benarkan kebenaran mikrofon untuk merakam.</span>`;
+            }
+        }
+
+        function confirmCheckpointRecording() {
+            if (!currentCpRecorded) return;
+            const cp = checkpointsData[activeCpIndex];
+            playSoundFX('correct');
+
+            if (!completedCheckpoints.includes(cp.id)) {
+                completedCheckpoints.push(cp.id);
+            }
+
+            document.getElementById('recordModal').classList.add('hidden');
+            isModalOpen = false;
+            updateHUD();
+
+            if (completedCheckpoints.length === checkpointsData.length) {
+                completeAllCheckpoints();
+            }
+        }
+
+        // ==========================================================
+        // 8. CARTA PEMENANG & SIJIL PENCAPAIAN DIGITAL
+        // ==========================================================
+        const defaultLeaderboardSec1 = [
+            { name: "Aisyah Humaira", className: "1 Bestari", score: 100, coins: 29, timeSec: 84 },
+            { name: "Muhammad Uzair", className: "1 Cemerlang", score: 100, coins: 27, timeSec: 95 },
+            { name: "Siti Nurhaliza", className: "1 Bestari", score: 95, coins: 24, timeSec: 110 }
+        ];
+
+        const defaultLeaderboardSec2 = [
+            { name: "Muhammad Uzair", className: "1 Cemerlang", coins: 25, timeSec: 52 },
+            { name: "Aisyah Humaira", className: "1 Bestari", coins: 24, timeSec: 58 },
+            { name: "Nurul Iman", className: "1 Pintar", coins: 21, timeSec: 65 }
+        ];
+
+        function getLeaderboardData(mode) {
+            const key = mode === 1 ? 'kembara_ilmu_lb_s1' : 'kembara_ilmu_lb_s2';
+            const saved = localStorage.getItem(key);
+            if (saved) return JSON.parse(saved);
+            return mode === 1 ? [...defaultLeaderboardSec1] : [...defaultLeaderboardSec2];
+        }
+
+        function saveToLeaderboard() {
+            const lb = getLeaderboardData(activeGameMode);
+            if (activeGameMode === 1) {
+                lb.push({ name: playerName, className: playerClass, score, coins, timeSec: elapsedSeconds });
+                lb.sort((a, b) => (b.score - a.score) || (b.coins - a.coins) || (a.timeSec - b.timeSec));
+                localStorage.setItem('kembara_ilmu_lb_s1', JSON.stringify(lb.slice(0, 10)));
+            } else {
+                lb.push({ name: playerName, className: playerClass, coins, timeSec: elapsedSeconds });
+                // Seksyen 2: Masa terpantas adalah pemenang utama!
+                lb.sort((a, b) => (a.timeSec - b.timeSec) || (b.coins - a.coins));
+                localStorage.setItem('kembara_ilmu_lb_s2', JSON.stringify(lb.slice(0, 10)));
+            }
+        }
+
+        function openLeaderboard() {
+            renderLeaderboardTab(activeGameMode || 1);
+            document.getElementById('leaderboardModal').classList.remove('hidden');
+        }
+
+        function renderLeaderboardTab(mode) {
+            const tab1 = document.getElementById('lbTab1');
+            const tab2 = document.getElementById('lbTab2');
+            if (mode === 1) {
+                tab1.className = "py-1.5 rounded-lg text-xs font-extrabold bg-[#38bdf8] text-[#070a14]";
+                tab2.className = "py-1.5 rounded-lg text-xs font-extrabold text-slate-300";
+            } else {
+                tab2.className = "py-1.5 rounded-lg text-xs font-extrabold bg-[#a855f7] text-white";
+                tab1.className = "py-1.5 rounded-lg text-xs font-extrabold text-slate-300";
+            }
+
+            const lb = getLeaderboardData(mode);
+            const listEl = document.getElementById('leaderboardList');
+            listEl.innerHTML = "";
+
+            lb.forEach((entry, idx) => {
+                const medal = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `#${idx + 1}`;
+                const rightStat = mode === 1
+                    ? `<span class="font-black text-[#fbbf24] text-base">${entry.score} M</span>`
+                    : `<span class="font-black text-[#34d399] text-base">⏱️ ${formatTime(entry.timeSec)}</span>`;
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between bg-[#0b1126] border border-[#38bdf8]/40 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm";
+                row.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-lg font-black w-7 text-center">${medal}</span>
+                        <div>
+                            <span class="font-extrabold text-white block">${entry.name} <span class="text-[11px] text-[#38bdf8]">(${entry.className || '-'})</span></span>
+                            <span class="text-[11px] text-slate-400">🪙 ${entry.coins} Syiling • ⏱️ ${formatTime(entry.timeSec)}</span>
+                        </div>
+                    </div>
+                    ${rightStat}
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        function closeLeaderboard() {
+            document.getElementById('leaderboardModal').classList.add('hidden');
+        }
+
+        function completeAllCheckpoints() {
+            stopTimer();
+            saveToLeaderboard();
+
+            document.getElementById('certPlayerName').innerText = playerName;
+            document.getElementById('certPlayerClass').innerText = `KELAS: ${playerClass}`;
+            document.getElementById('certCoins').innerText = `${coins} 🪙`;
+            document.getElementById('certTime').innerText = formatTime(elapsedSeconds);
+
+            const recBox = document.getElementById('certRecordingsBox');
+            const recList = document.getElementById('certRecordingsList');
+
+            if (activeGameMode === 1) {
+                document.getElementById('certDescriptionText').innerHTML = 
+                    `Telah berjaya menamatkan <b>Seksyen 1 (Pemahaman Bacaan)</b> merentasi kesemua <b>5 Checkpoint</b> dalam permainan pendidikan digital <b>KEMBARA ILMU</b>!`;
+                document.getElementById('certStat1Label').innerText = "Jumlah Markah";
+                document.getElementById('certScore').innerText = `${score} / 100`;
+                recBox.classList.add('hidden');
+            } else {
+                document.getElementById('certDescriptionText').innerHTML = 
+                    `Telah berjaya menamatkan <b>Kembara Rakaman Membaca</b> merentasi kesemua <b>5 Checkpoint</b> dalam permainan pendidikan digital <b>KEMBARA ILMU</b>!`;
+                document.getElementById('certStat1Label').innerText = "Status Bacaan";
+                document.getElementById('certScore').innerText = `5 / 5 Selesai`;
+
+                recBox.classList.remove('hidden');
+                recList.innerHTML = "";
+                Object.keys(recordedBlobs).forEach(cpId => {
+                    const item = recordedBlobs[cpId];
+                    const a = document.createElement('a');
+                    a.href = item.url;
+                    a.download = `Rekod_${playerName}_${playerClass}_CP${cpId}_${item.title}.webm`;
+                    a.className = "px-3 py-2 rounded-lg bg-[#0f172a] hover:bg-[#1e293b] text-white text-xs font-bold flex items-center justify-between";
+                    a.innerHTML = `<span>🎙️ CP ${cpId}: ${item.title}</span><i class="fa-solid fa-download text-[#fbbf24]"></i>`;
+                    recList.appendChild(a);
+                });
+            }
+
+            const dateStr = new Date().toLocaleDateString('ms-MY', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('certDate').innerText = dateStr;
+
+            document.getElementById('certificateModal').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
